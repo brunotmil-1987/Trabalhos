@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo - Bruno Guilherme dos Santos Barcelos</title>
+    <style>
+        /* Configurações Gerais para Tela */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f9f9;
+            color: #333;
+            line-height: 1.5;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        
+        /* Cabeçalho */
+        header {
+            border-bottom: 3px solid #1a365d;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        h1 {
+            color: #1a365d;
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .contato {
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .contato span {
+            display: inline-block;
+        }
+
+        /* Seções */
+        section {
+            margin-bottom: 25px;
+        }
+        h2 {
+            color: #2b6cb0;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        p {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        /* Listas e Itens de Experiência */
+        .item {
+            margin-bottom: 15px;
+        }
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 15px;
+        }
+        .sub-item {
+            font-style: italic;
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        ul {
+            margin-left: 20px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Ajustes Finais de Layout para Impressão PDF */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabeçalho com as suas informações principais -->
+        <header>
+            <h1>Bruno Guilherme dos Santos Barcelos</h1>
+            <div class="contato">
+                <span><strong>Cidade:</strong> [Uberaba - MG]</span>
+                <span><strong>Telefone:</strong> [ (34) 99166-9993 ]</span>
+                <span><strong>E-mail:</strong> [bruno.guilherme2022@gmail.com]</span>
+                <span><strong>LinkedIn:</strong><button>Visitar Perfil [www.linkedin.com/in/bruno-guilherme-8b1589183]</button> </span>
+            </div>
+        </header>
+
+        <!-- Objetivo Profissional -->
+        <section>
+            <h2>Objetivo</h2>
+            <p>Busco uma oportunidade para atuar nas áreas de  Logística, Pordução e Operação, ontribuindo com dedicação, facilidade de aprendizado e foco nos resultados da empresa.</p>
+        </section>
+
+        <!-- Escolaridade preenchida -->
+        <section>
+            <h2>Formação Acadêmica</h2>
+            <div class="item">
+                <div class="item-header">
+                    <span>Ensino Médio Completo</span>
+                    <span>[2008]</span>
+                </div>
+                <div class="sub-item">[Escola Estadual Aurélio Luis da Costa]</div>
+            </div>
+        </section>
+
+        <!-- Suas Experiências Profissionais -->
+        <section>
+            <h2>Experiência Profissional</h2>
+            
+            <!-- Modelo de Experiência 1 (Copie esse bloco para adicionar mais empresas se precisar) -->
+            <div class="item">
+                <div class="item-header">
+                    <span>VLI - FCA</span>
+                    <span>[Abril/ 2025] – [Agosto/2026]</span>
+                </div>
+                <div class="sub-item">Operador de Manobra Ferroviária</div>
+                <ul>
+                    <li>Operação de Manobra de Trens e Locomotivas. Criação de Trens iniciais para carregamento e recebimento de trens.
+                        Orientação de circualção em Pátio via Rádio. Recebimento de Trens de Enxofre para descarga no terminal Mosaic.
+                        Orientação de operações seguras, movimentações dos Aparalhos de Mudança de Vias (A.M.V), para Manobras.
+                        Checagem de condições de segurança das locomotivas e vagões, para operação segura.
+                        Comunicação via rádio com o Centro de Controle Operacional (CCO) e demais setores da ferrovia.
+
+                    
+                </ul>
+            </div>
+
+            <!-- Exemplo de Experiência 2 (Se for o primeiro emprego, você pode apagar esta seção ou colocar experiências voluntárias/bicos) -->
+            <div class="item">
+                <div class="item-header">
+                    <span>Terminal Integrador de Uberaba - TIUBE</span>
+                    <span>[Agosto/2024] – [Abril/2025]</span>
+                </div>
+                <div class="sub-item">Operador de carga de Trens ferroviarios</div>
+                <ul>
+                    <li>Operação de ccarga de Trens Ferroviários, manutenção do sistema de carregamento, 
+                        movimentação de produtos no silo para carregamento, limpeza de Trilhos e vias de circulação,
+                        conservação e monitoramento de equipamentos ferroviarios.
+                    </li>
+                </ul>
+            </div>
+            <div class="item">
+                <div class="item-header">
+                    <span>Cervejaria Petrópolis - Uberaba </span>
+                    <span>[Outubro/2023] – [Abril/2024]</span>
+                </div>
+                <div class="sub-item">Operador de Maquina de Envase</div>
+                <ul>
+                    <li>Operação de Maquinas de envasar liquidos, monitoramento de qualidade do produto, manutenção preventiva das maquinas, 
+                        limpeza e conservação das maquinas e equipamentos, controle de estoque de insumos para envase.
+                        Monitoramento de qualidade do produto final, controle de produção e registro de dados de produção.
+                        Controle de temperatura e pressão das maquinas, operação de maquinas de envase de bebidas, controle de qualidade do produto final.
+                    </li>
+                </ul>
+            </div>
+            <div class="item">
+                <div class="item-header">
+                    <span>Bit mais Uberaba</span>
+                    <Span>[junho/2024] – [Janeiro/2025]</Span>
+                </div>
+                <div class="sub-item">Instrutor/Professor de Informática</div>
+                <ul>
+                    <li>Orientador Professor de Informática Báscia, Informática avançada e Técinica. 
+                        Professor de Informática para cursos de capacitação profissional, ministrando aulas teóricas e práticas,
+                        nas competencias:  Excel (do básico ao avançado), World (do básico ao avançado),
+                         Power Point (do básico ao avançado), Internet, Redes Sociais, E-mail, Windows, Linux.
+                         Professor de Inteleigência Artificial, ChatGPT, MidJourney, Gamma, Dall-E, Bard, entre outros.
+                         Criação e Supervisão de Projetos de Inteligência Artificial, para empresas e pessoas físicas.
+                    </li>
+                </ul>
+            </div>        </section>
+
+        <!-- Habilidades e Competências -->
+        <section>
+            <h2>Habilidades e Competências</h2>
+            <ul>
+                <li>Técnico em Informática</li>
+                <li>Designer Gráfico</li>
+                <li>Programador nas Linguagens: JavaScript, Python, HTML, CSS, PHP</li>
+                <li>Web-Design</li>
+            </ul>
+        </section>
+
+        
+    </div>
+
+</body>
+</html>
