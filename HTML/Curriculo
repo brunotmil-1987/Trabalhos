@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo - Desenvolvedor Full-Stack</title>
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --bg-card: #0d0d0d;
+            --gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --gold-dark: #aa8c2c;
+            --text-main: #e0e0e0;
+            --border-gold: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.05);
+            padding: 50px;
+            border-radius: 8px;
+        }
+
+        /* Cabeçalho */
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--gold);
+            font-size: 2.1rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--gold-light);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .contact-info span {
+            color: var(--gold);
+        }
+
+        /* Seções */
+        section {
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            color: var(--gold);
+            font-size: 1.4rem;
+            border-left: 4px solid var(--gold);
+            padding-left: 12px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #cccccc;
+        }
+
+        /* Caixas de Experiência e Habilidades */
+        .box-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #121212;
+            border: 1px solid var(--border-gold);
+            padding: 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .card-title {
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .card-company {
+            color: var(--gold);
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .card-date {
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 12px;
+        }
+
+        /* Grade de Habilidades */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-box {
+            background-color: #121212;
+            border: 1px solid var(--border-gold);
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .skill-box h3 {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--border-gold);
+            padding-bottom: 4px;
+        }
+
+        .skill-box ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .skill-box li {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .skill-box li::before {
+            content: "▪";
+            color: var(--gold);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header>
+            <h1>Bruno Guilherme dos Santos Barcelos</h1>
+            <div class="subtitle">Desenvolvedor Full-Stack</div>
+            <div class="contact-info">
+                <div><span>E-mail:</span> bruno.guilherme2022@gmail.com</div>
+                <div><span>Telefone:</span> (34) 99166-9993</div>
+                <div><span>Local:</span> Uberaba, MG</div> 
+            </div>
+        </header>
+
+        <!-- Resumo Profissional -->
+        <section>
+            <h2>Perfil Profissional</h2>
+            <p>Desenvolvedor full-stack altamente motivado com ampla experiência no planejamento, desenvolvimento e manutenção de aplicações web, e-commerce e ecossistemas automatizados. Focado em escrever código limpo, criar interfaces sofisticadas e entregar soluções de alta performance.</p>
+        </section>
+
+        <!-- Experiência Profissional -->
+        <section>
+            <h2>Experiência Profissional</h2>
+            <div class="box-container">
+                
+                <div class="card">
+                    <div class="card-title">Desenvolvedor Full-Stack Sênior</div>
+                    <div class="card-company">Hades Softwares / Projetos Independentes</div>
+                    <div class="card-date">2023 - Presente</div>
+                    <p>Atuação no design, arquitetura e implementação de aplicativos web, plataformas de vendas e automações utilizando tecnologias modernas. Foco em arquiteturas escaláveis, integrações de APIs e interfaces otimizadas.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Desenvolvedor Web & Soluções Automatizadas</div>
+                    <div class="card-company">Freelancer / Contratado</div>
+                    <div class="card-date">2021 - 2023</div>
+                    <p>Desenvolvimento de plataformas de e-commerce personalizadas, criação de sistemas de inventário internos e automação de fluxos de chat e atendimento utilizando PHP, JavaScript e bancos de dados relacionais.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Habilidades Técnicas -->
+        <section>
+            <h2>Habilidades & Tecnologias</h2>
+            <div class="skills-grid">
+                
+                <div class="skill-box">
+                    <h3>Frontend</h3>
+                    <ul>
+                        <li>HTML5 / CSS3 / SASS</li>
+                        <li>JavaScript (ES6+)</li>
+                        <li>Design Responsivo</li>
+                        <li>UI/UX minimalista</li>
+                    </ul>
+                </div>
+
+                <div class="skill-box">
+                    <h3>Backend & Linguagens</h3>
+                    <ul>
+                        <li>PHP / Ruby on Rails</li>
+                        <li>Python / Scripts de Automação</li>
+                        <li>Node.js / JavaScript</li>
+                        <li>C++</li>
+                    </ul>
+                </div>
+
+                <div class="skill-box">
+                    <h3>Banco de Dados & Ferramentas</h3>
+                    <ul>
+                        <li>MySQL / PostgreSQL</li>
+                        <li>Selenium / Automações</li>
+                        <li>APIs RESTful</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+
+
+        <!-- Formação Acadêmica -->
+        <section>
+            <h2>Formação Acadêmica</h2>
+            <div class="box-container">
+                <div class="card">
+                    <div class="card-title">Bacharelado em Ciência da Computação / Engenharia de Software</div>
+                    <div class="card-company">Massachusetts Institute of Technology</div>
+                    <div class="card-date">Concluído</div>
+                    <p>Foco em algoritmos, engenharia de software, estruturas de dados e desenvolvimento web avançado.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>
