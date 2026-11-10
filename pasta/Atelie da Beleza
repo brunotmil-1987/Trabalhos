@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque & Login - Ateliê da Beleza</title>
+    <link rel="icon" type="image/png" href="icone-Estoque-cutout.ico">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <!-- ================= TELA DE LOGIN ================= -->
+    <div id="login-screen">
+        <div class="login-card">
+            <img src="IMG-20261003-WA0019.jpg" alt="Logo Ateliê da Beleza" class="logo">
+            <h2 class="texto-furta-cor">Ateliê da Beleza</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsuario">Usuário</label>
+                    <select id="loginUsuario" required>
+                        <option value="">Selecione o usuário...</option>
+                        <option value="Bruno">Bruno</option>
+                        <option value="Natalia">Natalia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loginSenha">Senha</label>
+                    <input type="password" id="loginSenha" required placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="botao-furta-cor">Entrar no Sistema</button>
+                <div id="erroLogin" class="erro-msg">Usuário ou senha incorretos!</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= APLICATIVO DE ESTOQUE ================= -->
+    <div id="app-screen">
+        <div class="usuario-logado">
+            Logado como: <strong id="nomeUsuarioLogado"></strong> 
+            <button onclick="fazerLogout()">Sair</button>
+        </div>
+
+        <header>
+            <img src="IMG-20261003-WA0019.jpg" alt="Logotipo Ateliê da Beleza" class="logo">
+            <h1 class="texto-furta-cor">Estoque - Ateliê da Beleza</h1>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="mudarAba('entrada')">➕ Entrada de Produtos</button>
+            <button class="tab-btn" onclick="mudarAba('roupas')">Estoque de Roupas</button>
+            <button class="tab-btn" onclick="mudarAba('joias')">Estoque de Joias</button>
+            <button class="tab-btn" onclick="mudarAba('ruby')">Estoque Ruby Rose</button>
+        </div>
+
+        <!-- ================= ABA DE ENTRADA GERAL DE PRODUTOS ================= -->
+        <div id="aba-entrada" class="tab-content active">
+            <div class="card">
+                <h2 class="texto-furta-cor">Cadastrar Novo Produto no Estoque</h2>
+                <form id="globalProductForm">
+                    <div class="form-group">
+                        <label for="tipoProduto">Selecione o Setor / Categoria</label>
+                        <select id="tipoProduto" required onchange="atualizarLabelsEntrada()">
+                            <option value="">Selecione...</option>
+                            <option value="roupas">Roupa / Vestuário</option>
+                            <option value="joias">Joia / Acessório</option>
+                            <option value="ruby">Ruby Rose (Cosméticos)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gNome" id="labelNome">Nome do Produto</label>
+                        <input type="text" id="gNome" required placeholder="Ex: Vestido / Anel / Base">
+                    </div>
+                    <div class="form-group">
+                        <label for="gCor" id="labelCor">Cor / Tom / Banho</label>
+                        <input type="text" id="gCor" required placeholder="Ex: Preto / Ouro 18k / Cor L2">
+                    </div>
+                    <div class="form-group">
+                        <label for="gTamanho" id="labelTamanho">Tamanho / Versão / Volume</label>
+                        <input type="text" id="gTamanho" required placeholder="Ex: P / M / 25ml / Tam 16">
+                    </div>
+                    <div class="form-group">
+                        <label for="gPreco">Preço Unitário (R$)</label>
+                        <input type="number" step="0.01" id="gPreco" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="gQuantidade">Quantidade (Entrada)</label>
+                        <input type="number" id="gQuantidade" min="1" value="1" required>
+                    </div>
+                    <button type="submit" class="botao-furta-cor">Cadastrar e Enviar para o Estoque</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ABA DE ROUPAS -->
+        <div id="aba-roupas" class="tab-content">
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2 class="texto-furta-cor">Gerenciamento de Estoque (Roupas)</h2>
+                <div class="stats">
+                    <div class="stat-box">Registros<span id="totalProdutos">0</span></div>
+                    <div class="stat-box">Vendidos<span id="totalVendidos">0</span></div>
+                    <div class="stat-box">Valor Total<span id="valorTotalEstoque">R$ 0,00</span></div>
+                </div>
+                <div class="search-bar">
+                    <label for="search">Pesquisar Roupas</label>
+                    <input type="text" id="search" placeholder="Digite o nome, cor ou tamanho..." oninput="filtrarProdutos()">
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="texto-furta-cor">Roupa</th>
+                                <th class="texto-furta-cor">Cor</th>
+                                <th class="texto-furta-cor">Tam.</th>
+                                <th class="texto-furta-cor">Preço Total (Qtd)</th>
+                                <th class="texto-furta-cor">Qtd</th>
+                                <th class="texto-furta-cor">Status</th>
+                                <th class="texto-furta-cor">Ações de Venda / Exclusão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaCorpo"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA DE JOIAS -->
+        <div id="aba-joias" class="tab-content">
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2 class="texto-furta-cor">Gerenciamento de Estoque (Joias)</h2>
+                <div class="stats">
+                    <div class="stat-box">Registros<span id="totalJoias">0</span></div>
+                    <div class="stat-box">Vendidos<span id="totalJoiasVendidas">0</span></div>
+                    <div class="stat-box">Valor Total<span id="valorTotalJoias">R$ 0,00</span></div>
+                </div>
+                <div class="search-bar">
+                    <label for="searchJoia">Pesquisar Joias</label>
+                    <input type="text" id="searchJoia" placeholder="Digite o nome, cor ou tamanho..." oninput="filtrarJoias()">
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="texto-furta-cor">Joia</th>
+                                <th class="texto-furta-cor">Cor/Banho</th>
+                                <th class="texto-furta-cor">Tam.</th>
+                                <th class="texto-furta-cor">Preço Total (Qtd)</th>
+                                <th class="texto-furta-cor">Qtd</th>
+                                <th class="texto-furta-cor">Status</th>
+                                <th class="texto-furta-cor">Ações de Venda / Exclusão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaJoiasCorpo"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA RUBY ROSE -->
+        <div id="aba-ruby" class="tab-content">
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2 class="texto-furta-cor">Gerenciamento de Estoque (Ruby Rose)</h2>
+                <div class="stats">
+                    <div class="stat-box">Registros<span id="totalRuby">0</span></div>
+                    <div class="stat-box">Vendidos<span id="totalRubyVendidos">0</span></div>
+                    <div class="stat-box">Valor Total<span id="valorTotalRuby">R$ 0,00</span></div>
+                </div>
+                <div class="search-bar">
+                    <label for="searchRuby">Pesquisar Ruby Rose</label>
+                    <input type="text" id="searchRuby" placeholder="Digite o nome, cor ou versão..." oninput="filtrarRuby()">
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="texto-furta-cor">Produto</th>
+                                <th class="texto-furta-cor">Cor/Tom</th>
+                                <th class="texto-furta-cor">Versão</th>
+                                <th class="texto-furta-cor">Preço Total (Qtd)</th>
+                                <th class="texto-furta-cor">Qtd</th>
+                                <th class="texto-furta-cor">Status</th>
+                                <th class="texto-furta-cor">Ações de Venda / Exclusão</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaRubyCorpo"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const usuariosValidos = {
+            "Bruno": "03",
+            "Natalia": "03"
+        };
+
+        const loginForm = document.getElementById('loginForm');
+        const loginScreen = document.getElementById('login-screen');
+        const appScreen = document.getElementById('app-screen');
+        const erroLogin = document.getElementById('erroLogin');
+        const nomeUsuarioLogado = document.getElementById('nomeUsuarioLogado');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuarioSalvo = localStorage.getItem('usuario_logado_atelie');
+            if (usuarioSalvo) {
+                entrarNoSistema(usuarioSalvo);
+            }
+        });
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usuario = document.getElementById('loginUsuario').value;
+            const senha = document.getElementById('loginSenha').value;
+
+            if (usuariosValidos[usuario] && usuariosValidos[usuario] === senha) {
+                localStorage.setItem('usuario_logado_atelie', usuario);
+                entrarNoSistema(usuario);
+            } else {
+                erroLogin.style.display = 'block';
+            }
+        });
+
+        function entrarNoSistema(usuario) {
+            loginScreen.style.display = 'none';
+            appScreen.style.display = 'block';
+            nomeUsuarioLogado.textContent = usuario;
+            
+            salvarERenderizarProdutos();
+            salvarERenderizarJoias();
+            salvarERenderizarRuby();
+        }
+
+        function fazerLogout() {
+            localStorage.removeItem('usuario_logado_atelie');
+            appScreen.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            loginForm.reset();
+            erroLogin.style.display = 'none';
+        }
+
+        function mudarAba(aba) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            if (aba === 'entrada') {
+                document.getElementById('aba-entrada').classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else if (aba === 'roupas') {
+                document.getElementById('aba-roupas').classList.add('active');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            } else if (aba === 'joias') {
+                document.getElementById('aba-joias').classList.add('active');
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            } else if (aba === 'ruby') {
+                document.getElementById('aba-ruby').classList.add('active');
+                document.querySelectorAll('.tab-btn')[3].classList.add('active');
+            }
+        }
+
+        function atualizarLabelsEntrada() {
+            const tipo = document.getElementById('tipoProduto').value;
+            const lNome = document.getElementById('labelNome');
+            const lCor = document.getElementById('labelCor');
+            const lTam = document.getElementById('labelTamanho');
+
+            if (tipo === 'roupas') {
+                lNome.textContent = "Nome da Peça / Roupa";
+                lCor.textContent = "Cor";
+                lTam.textContent = "Tamanho (Ex: P / M / G)";
+            } else if (tipo === 'joias') {
+                lNome.textContent = "Nome / Tipo da Joia";
+                lCor.textContent = "Cor / Banho";
+                lTam.textContent = "Tamanho / Numeração";
+            } else if (tipo === 'ruby') {
+                lNome.textContent = "Nome do Produto";
+                lCor.textContent = "Cor / Tom";
+                lTam.textContent = "Versão / Volume";
+            }
+        }
+
+        const globalProductForm = document.getElementById('globalProductForm');
+        globalProductForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const tipo = document.getElementById('tipoProduto').value;
+            
+            if (!tipo) {
+                alert("Por favor, selecione o setor / categoria.");
+                return;
+            }
+
+            const precoUnitario = parseFloat(document.getElementById('gPreco').value);
+            const quantidade = parseInt(document.getElementById('gQuantidade').value);
+
+            const novoItem = {
+                id: Date.now() + Math.random(),
+                nome: document.getElementById('gNome').value,
+                cor: document.getElementById('gCor').value,
+                tamanho: document.getElementById('gTamanho').value,
+                precoUnitario: precoUnitario,
+                preco: precoUnitario * quantidade,
+                quantidade: quantidade,
+                status: 'Disponível'
+            };
+
+            if (tipo === 'roupas') {
+                produtos.push(novoItem);
+                salvarERenderizarProdutos();
+            } else if (tipo === 'joias') {
+                joias.push(novoItem);
+                salvarERenderizarJoias();
+            } else if (tipo === 'ruby') {
+                ruby.push(novoItem);
+                salvarERenderizarRuby();
+            }
+
+            globalProductForm.reset();
+            document.getElementById('tipoProduto').value = "";
+            atualizarLabelsEntrada();
+            alert("Produto cadastrado com sucesso no estoque!");
+        });
+
+        // --- SISTEMA DE ROUPAS ---
+        let produtos = JSON.parse(localStorage.getItem('estoque_atelie_roupas')) || [];
+        const tabelaCorpo = document.getElementById('tabelaCorpo');
+        const inputSearch = document.getElementById('search');
+
+        function salvarERenderizarProdutos() {
+            localStorage.setItem('estoque_atelie_roupas', JSON.stringify(produtos));
+            renderizarTabelaProdutos(produtos);
+            atualizarEstatisticasProdutos();
+        }
+
+        function renderizarTabelaProdutos(lista) {
+            tabelaCorpo.innerHTML = '';
+            if (lista.length === 0) {
+                tabelaCorpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #777; padding: 20px;">Nenhuma roupa cadastrada.</td></tr>`;
+                return;
+            }
+            lista.forEach(prod => {
+                const tr = document.createElement('tr');
+                const badge = prod.status === 'Vendido' ? `<span class="badge-vendido">Vendido</span>` : `<span class="badge-disponivel">Disponível</span>`;
+                
+                let acoesHtml = '';
+                if (prod.status !== 'Vendido') {
+                    acoesHtml = `
+                        <input type="number" id="qtd-venda-roupa-${prod.id}" class="qtd-venda-input" min="1" max="${prod.quantidade}" value="1" title="Quantidade a vender">
+                        <button class="btn-vender" onclick="venderParcialProduto(${prod.id})">Vender</button>
+                    `;
+                }
+                acoesHtml += `<button class="btn-excluir" onclick="excluirProduto(${prod.id})" title="Excluir item">🗑️</button>`;
+
+                tr.innerHTML = `
+                    <td>${prod.nome}</td><td>${prod.cor}</td><td>${prod.tamanho}</td>
+                    <td>R$ ${Number(prod.preco).toFixed(2)}</td><td>${prod.quantidade}</td><td>${badge}</td>
+                    <td class="actions-cell">${acoesHtml}</td>`;
+                tabelaCorpo.appendChild(tr);
+            });
+        }
+
+        function venderParcialProduto(id) {
+            const inputQtd = document.getElementById(`qtd-venda-roupa-${id}`);
+            const qtdParaVender = parseInt(inputQtd.value) || 1;
+
+            produtos = produtos.map(p => {
+                if(p.id === id) {
+                    if (qtdParaVender >= p.quantidade) {
+                        p.quantidade = 0;
+                        p.status = 'Vendido';
+                        p.preco = 0;
+                    } else {
+                        p.quantidade -= qtdParaVender;
+                        p.preco = p.precoUnitario * p.quantidade;
+                    }
+                }
+                return p;
+            });
+            salvarERenderizarProdutos();
+        }
+
+        function excluirProduto(id) {
+            if(confirm("Deseja realmente excluir este item?")) {
+                produtos = produtos.filter(p => p.id !== id);
+                salvarERenderizarProdutos();
+            }
+        }
+        function filtrarProdutos() {
+            const termo = inputSearch.value.toLowerCase();
+            renderizarTabelaProdutos(produtos.filter(p => p.nome.toLowerCase().includes(termo) || p.cor.toLowerCase().includes(termo) || p.tamanho.toLowerCase().includes(termo)));
+        }
+        function atualizarEstatisticasProdutos() {
+            document.getElementById('totalProdutos').textContent = produtos.length;
+            document.getElementById('totalVendidos').textContent = produtos.filter(p => p.status === 'Vendido').length;
+            const total = produtos.filter(p => p.status !== 'Vendido').reduce((acc, p) => acc + Number(p.preco), 0);
+            document.getElementById('valorTotalEstoque').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        // --- SISTEMA DE JOIAS ---
+        let joias = JSON.parse(localStorage.getItem('estoque_atelie_joias')) || [];
+        const tabelaJoiasCorpo = document.getElementById('tabelaJoiasCorpo');
+        const searchJoia = document.getElementById('searchJoia');
+
+        function salvarERenderizarJoias() {
+            localStorage.setItem('estoque_atelie_joias', JSON.stringify(joias));
+            renderizarTabelaJoias(joias);
+            atualizarEstatisticasJoias();
+        }
+
+        function renderizarTabelaJoias(lista) {
+            tabelaJoiasCorpo.innerHTML = '';
+            if (lista.length === 0) {
+                tabelaJoiasCorpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #777; padding: 20px;">Nenhuma joia cadastrada.</td></tr>`;
+                return;
+            }
+            lista.forEach(joia => {
+                const tr = document.createElement('tr');
+                const badge = joia.status === 'Vendido' ? `<span class="badge-vendido">Vendido</span>` : `<span class="badge-disponivel">Disponível</span>`;
+                
+                let acoesHtml = '';
+                if (joia.status !== 'Vendido') {
+                    acoesHtml = `
+                        <input type="number" id="qtd-venda-joia-${joia.id}" class="qtd-venda-input" min="1" max="${joia.quantidade}" value="1" title="Quantidade a vender">
+                        <button class="btn-vender" onclick="venderParcialJoia(${joia.id})">Vender</button>
+                    `;
+                }
+                acoesHtml += `<button class="btn-excluir" onclick="excluirJoia(${joia.id})" title="Excluir item">🗑️</button>`;
+
+                tr.innerHTML = `
+                    <td>${joia.nome}</td><td>${joia.cor}</td><td>${joia.tamanho}</td>
+                    <td>R$ ${Number(joia.preco).toFixed(2)}</td><td>${joia.quantidade}</td><td>${badge}</td>
+                    <td class="actions-cell">${acoesHtml}</td>`;
+                tabelaJoiasCorpo.appendChild(tr);
+            });
+        }
+
+        function venderParcialJoia(id) {
+            const inputQtd = document.getElementById(`qtd-venda-joia-${id}`);
+            const qtdParaVender = parseInt(inputQtd.value) || 1;
+
+            joias = joias.map(j => {
+                if(j.id === id) {
+                    if (qtdParaVender >= j.quantidade) {
+                        j.quantidade = 0;
+                        j.status = 'Vendido';
+                        j.preco = 0;
+                    } else {
+                        j.quantidade -= qtdParaVender;
+                        j.preco = j.precoUnitario * j.quantidade;
+                    }
+                }
+                return j;
+            });
+            salvarERenderizarJoias();
+        }
+
+        function excluirJoia(id) {
+            if(confirm("Deseja realmente excluir este item?")) {
+                joias = joias.filter(j => j.id !== id);
+                salvarERenderizarJoias();
+            }
+        }
+        function filtrarJoias() {
+            const termo = searchJoia.value.toLowerCase();
+            renderizarTabelaJoias(joias.filter(j => j.nome.toLowerCase().includes(termo) || j.cor.toLowerCase().includes(termo) || j.tamanho.toLowerCase().includes(termo)));
+        }
+        function atualizarEstatisticasJoias() {
+            document.getElementById('totalJoias').textContent = joias.length;
+            document.getElementById('totalJoiasVendidas').textContent = joias.filter(j => j.status === 'Vendido').length;
+            const total = joias.filter(j => j.status !== 'Vendido').reduce((acc, j) => acc + Number(j.preco), 0);
+            document.getElementById('valorTotalJoias').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        // --- SISTEMA RUBY ROSE ---
+        let ruby = JSON.parse(localStorage.getItem('estoque_atelie_ruby')) || [];
+        const tabelaRubyCorpo = document.getElementById('tabelaRubyCorpo');
+        const searchRuby = document.getElementById('searchRuby');
+
+        function salvarERenderizarRuby() {
+            localStorage.setItem('estoque_atelie_ruby', JSON.stringify(ruby));
+            renderizarTabelaRuby(ruby);
+            atualizarEstatisticasRuby();
+        }
+
+        function renderizarTabelaRuby(lista) {
+            tabelaRubyCorpo.innerHTML = '';
+            if (lista.length === 0) {
+                tabelaRubyCorpo.innerHTML = `<tr><td colspan="7" style="text-align:center; color: #777; padding: 20px;">Nenhum produto Ruby Rose cadastrado.</td></tr>`;
+                return;
+            }
+            lista.forEach(item => {
+                const tr = document.createElement('tr');
+                const badge = item.status === 'Vendido' ? `<span class="badge-vendido">Vendido</span>` : `<span class="badge-disponivel">Disponível</span>`;
+                
+                let acoesHtml = '';
+                if (item.status !== 'Vendido') {
+                    acoesHtml = `
+                        <input type="number" id="qtd-venda-ruby-${item.id}" class="qtd-venda-input" min="1" max="${item.quantidade}" value="1" title="Quantidade a vender">
+                        <button class="btn-vender" onclick="venderParcialRuby(${item.id})">Vender</button>
+                    `;
+                }
+                acoesHtml += `<button class="btn-excluir" onclick="excluirRuby(${item.id})" title="Excluir item">🗑️</button>`;
+
+                tr.innerHTML = `
+                    <td>${item.nome}</td><td>${item.cor}</td><td>${item.tamanho}</td>
+                    <td>R$ ${Number(item.preco).toFixed(2)}</td><td>${item.quantidade}</td><td>${badge}</td>
+                    <td class="actions-cell">${acoesHtml}</td>`;
+                tabelaRubyCorpo.appendChild(tr);
+            });
+        }
+
+        function venderParcialRuby(id) {
+            const inputQtd = document.getElementById(`qtd-venda-ruby-${id}`);
+            const qtdParaVender = parseInt(inputQtd.value) || 1;
+
+            ruby = ruby.map(i => {
+                if(i.id === id) {
+                    if (qtdParaVender >= i.quantidade) {
+                        i.quantidade = 0;
+                        i.status = 'Vendido';
+                        i.preco = 0;
+                    } else {
+                        i.quantidade -= qtdParaVender;
+                        i.preco = i.precoUnitario * i.quantidade;
+                    }
+                }
+                return i;
+            });
+            salvarERenderizarRuby();
+        }
+
+        function excluirRuby(id) {
+            if(confirm("Deseja realmente excluir este item?")) {
+                ruby = ruby.filter(i => i.id !== id);
+                salvarERenderizarRuby();
+            }
+        }
+        function filtrarRuby() {
+            const termo = searchRuby.value.toLowerCase();
+            renderizarTabelaRuby(ruby.filter(i => i.nome.toLowerCase().includes(termo) || i.cor.toLowerCase().includes(termo) || i.tamanho.toLowerCase().includes(termo)));
+        }
+        function atualizarEstatisticasRuby() {
+            document.getElementById('totalRuby').textContent = ruby.length;
+            document.getElementById('totalRubyVendidos').textContent = ruby.filter(i => i.status === 'Vendido').length;
+            const total = ruby.filter(i => i.status !== 'Vendido').reduce((acc, i) => acc + Number(i.preco), 0);
+            document.getElementById('valorTotalRuby').textContent = `R$ ${total.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
