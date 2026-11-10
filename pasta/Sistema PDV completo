@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque // Sistema PDV Avançado</title>
+    <link rel="icon" type="image/png" href="polygon_vector_geometric_icon_208670.png">
+
+    <style>
+        :root {
+            --bg-color: #08080a;
+            --card-bg: #121217;
+            --card-hover: #1b1b22;
+            --text-color: #e4e4e7;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            
+            /* Efeito Furta-Cor (Iridescent Gradient) */
+            --furta-cor: linear-gradient(135deg, #ff79c6, #bd93f9, #8be9fd, #50fa7b);
+            --furta-cor-solid: #bd93f9;
+            --success-color: #50fa7b;
+            --danger-color: #ff79c6;
+            --pix-color: #26D0CE;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Barra de Rolagem Customizada Furta-Cor */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: rgba(189, 147, 249, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--furta-cor-solid); }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* TELA DE LOGIN */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(8, 8, 10, 0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+            position: relative;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--furta-cor);
+            border-radius: 26px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .login-card h2 {
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            background: var(--furta-cor);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--furta-cor-solid);
+            box-shadow: 0 0 15px rgba(189, 147, 249, 0.2);
+        }
+
+        /* APP PDV PRINCIPAL */
+        #app-screen {
+            display: none;
+            width: 100%;
+            max-width: 1400px;
+            height: 95vh;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            flex-direction: column;
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        header {
+            padding: 20px 30px;
+            background: rgba(18, 18, 23, 0.95);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            background: var(--furta-cor);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .user-info { font-size: 0.9rem; color: var(--text-muted); }
+
+        .btn-mini {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-mini:hover { background: rgba(189, 147, 249, 0.15); border-color: var(--furta-cor-solid); }
+
+        .app-body { display: flex; flex: 1; overflow: hidden; }
+
+        sidebar {
+            width: 280px;
+            background: rgba(10, 10, 14, 0.6);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .sidebar-actions {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.03); color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+        .tab-btn.active {
+            background: var(--furta-cor);
+            color: #08080a;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(189, 147, 249, 0.3);
+        }
+
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+
+        .control-panel { display: flex; gap: 15px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
+        .search-bar { flex: 1; min-width: 250px; padding: 12px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; color: #fff; font-size: 0.95rem; }
+        .search-bar:focus { outline: none; border-color: var(--furta-cor-solid); }
+
+        .btn-primary {
+            padding: 12px 24px;
+            background: var(--furta-cor);
+            color: #08080a;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(189, 147, 249, 0.4); }
+
+        .btn-danger-gradient {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff5555, #ff79c6);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 85, 85, 0.3);
+        }
+        .btn-danger-gradient:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 85, 85, 0.5); }
+
+        /* Tabela expandida para ocupar o espaço disponível */
+        .table-container { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-color); border-radius: 16px; flex: 1; min-height: 350px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 15px 20px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+        th { background: rgba(18, 18, 23, 0.98); color: var(--text-muted); font-weight: 600; position: sticky; top: 0; z-index: 10; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .qtd-venda-input { width: 70px; padding: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; text-align: center; }
+        .btn-action { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: transparent; color: #fff; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-excluir { border-color: rgba(255, 121, 198, 0.3); color: var(--danger-color); }
+        .btn-excluir:hover { background: rgba(255, 121, 198, 0.1); }
+
+        .checkout-panel { background: rgba(18, 18, 23, 0.95); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .checkout-info { display: flex; gap: 30px; align-items: center; }
+        .checkout-info div span { font-size: 0.85rem; color: var(--text-muted); display: block; }
+        .checkout-info div h4 { font-size: 1.3rem; color: var(--success-color); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 3000; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--border-color); padding: 35px; border-radius: 24px; width: 100%; max-width: 580px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-content h3 { margin-bottom: 20px; color: #fff; font-size: 1.4rem; }
+        .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
+
+        .pdv-window-body { display: flex; flex-direction: column; gap: 20px; }
+        .pdv-items-list { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; max-height: 180px; overflow-y: auto; }
+        .pdv-item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+
+        /* TABELA DE SANGRIA / FECHAMENTO DE CAIXA */
+        .sangria-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        .sangria-table th, .sangria-table td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .sangria-table th { background: rgba(255,255,255,0.03); color: var(--text-muted); }
+
+        /* ESTILO DO COMPROVANTE FISCAL */
+        .receipt-card { background: #fff; color: #111; padding: 30px; border-radius: 12px; font-family: 'Courier New', Courier, monospace; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left; position: relative; }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .receipt-header h4 { font-size: 1.2rem; font-weight: bold; }
+        .receipt-header p { font-size: 0.8rem; color: #555; }
+        .receipt-body { font-size: 0.85rem; margin-bottom: 15px; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .receipt-total { border-top: 2px dashed #333; padding-top: 10px; font-weight: bold; font-size: 1rem; }
+
+        .pix-box { text-align: center; display: flex; flex-direction: column; gap: 15px; display: none; }
+        .qrcode-box { background: #fff; padding: 10px; border-radius: 10px; width: 160px; height: 160px; margin: 0 auto; }
+        .qrcode-box img { width: 100%; height: 100%; }
+
+        @media (max-width: 768px) {
+            .app-body { flex-direction: column; }
+            sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 10px; }
+            .tab-btn { text-align: center; white-space: nowrap; }
+            #app-screen { height: 100vh; border-radius: 0; margin: 0; }
+            .checkout-panel { flex-direction: column; gap: 15px; align-items: stretch; }
+        }
+
+        /* Estilo oculto na tela comum, ativo na impressão */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receipt-modal.modal-active-print, #receipt-modal.modal-active-print * {
+                visibility: visible;
+            }
+            #receipt-modal.modal-active-print {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: transparent !important;
+            }
+            #receipt-modal button {
+                display: none !important;
+            }
+
+            #fechar-caixa-modal.modal-active-print, #fechar-caixa-modal.modal-active-print * {
+                visibility: visible;
+            }
+            #fechar-caixa-modal.modal-active-print {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #fff !important;
+                color: #000 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            #fechar-caixa-modal.modal-active-print .modal-content {
+                background: #fff !important;
+                color: #000 !important;
+                box-shadow: none !important;
+                border: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            #fechar-caixa-modal.modal-active-print h3,
+            #fechar-caixa-modal.modal-active-print h3 span,
+            #fechar-caixa-modal.modal-active-print span,
+            #fechar-caixa-modal.modal-active-print td,
+            #fechar-caixa-modal.modal-active-print th {
+                color: #000 !important;
+            }
+            #fechar-caixa-modal.modal-active-print button,
+            #fechar-caixa-modal.modal-active-print .close-modal {
+                display: none !important;
+            }
+            #fechar-caixa-modal.modal-active-print table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            #fechar-caixa-modal.modal-active-print th, 
+            #fechar-caixa-modal.modal-active-print td {
+                border: 1px solid #ddd !important;
+                padding: 8px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN (COM DADOS OCULTOS: Natalia / 03) -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>Login Vendas PDV</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="usuario">Operador(a)</label>
+                    <input type="text" id="usuario" placeholder="Digite o nome do operador" required>
+                </div>
+                <div class="input-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" placeholder="Digite a senha" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Acessar Sistema</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TELA PRINCIPAL PDV -->
+    <div id="app-screen">
+        <header>
+            <h1>PDV // ATELIÊ DA BELEZA</h1>
+            <div class="user-badge">
+                <span class="user-info">Operadora: <strong id="currentOperatorName">Natalia</strong></span>
+                <button class="btn-mini" onclick="abrirModalTrocarOperador()">Trocar Operador</button>
+            </div>
+        </header>
+
+        <div class="app-body">
+            <sidebar>
+                <button class="tab-btn active" onclick="mudarAba('joias', this)">💍 Jóias</button>
+                <button class="tab-btn" onclick="mudarAba('roupas', this)">👗 Roupas</button>
+                <button class="tab-btn" onclick="mudarAba('maquiagens', this)">💄 Maquiagens</button>
+
+                <!-- BOTÃO DE FECHAR CAIXA E SANGRIA ABAIXO DO OPERADOR -->
+                <div class="sidebar-actions">
+                    <button class="btn-primary" style="width: 100%; background: linear-gradient(135deg, #8be9fd, #bd93f9); color: #08080a;" onclick="abrirPesquisaIndex()">🔍 Pesquisar no Estoque (Index)</button>
+                    <button class="btn-primary" style="width: 100%; background: linear-gradient(135deg, #ff79c6, #ffb86c);" onclick="abrirFecharCaixa()">📊 Fechar Caixa / Sangria</button>
+                </div>
+            </sidebar>
+
+            <div class="main-content">
+                <div class="control-panel">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar por nome ou código..." oninput="filtrarProdutos()">
+                    <button class="btn-action" style="background: rgba(139, 233, 253, 0.15); border-color: #8be9fd; color: #8be9fd; padding: 12px 18px; border-radius: 12px; font-weight: bold;" onclick="abrirPesquisaIndex()">🔍 Ir para Pesquisa no Index</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="selectAll" onclick="toggleSelecionarTodos(this)"></th>
+                                <th>Produto & Referência</th>
+                                <th>Valor Unitário</th>
+                                <th>Disponível</th>
+                                <th>Qtd. a Vender (Un.)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="checkout-panel">
+                    <div class="checkout-info">
+                        <div>
+                            <span>Itens Selecionados</span>
+                            <h4 id="itensSelecionadosCount">0 produtos</h4>
+                        </div>
+                        <div>
+                            <span>Valor Total da Compra</span>
+                            <h4 id="valorTotalVenda">R$ 0,00</h4>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="abrirJanelaPDV()">Ir para o PDV (Finalizar Compra)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO -->
+    <div id="cadastro-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="fecharModalCadastro()">×</button>
+            <h3>Cadastrar Novo Produto</h3>
+            <form id="cadastro-form">
+                <div class="input-group">
+                    <label for="prod-categoria">Categoria / Aba</label>
+                    <select id="prod-categoria" required>
+                        <option value="joias">Jóias</option>
+                        <option value="roupas">Roupas</option>
+                        <option value="maquiagens">Maquiagens</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="prod-codigo">Código / Ref</label>
+                    <input type="text" id="prod-codigo" placeholder="Ex: REF-01">
+                </div>
+                <div class="input-group">
+                    <label for="prod-nome">Nome do Produto</label>
+                    <input type="text" id="prod-nome" placeholder="Ex: Anel Solitário" required>
+                </div>
+                <div class="input-group">
+                    <label for="prod-valor">Valor Unitário (R$)</label>
+                    <input type="number" step="0.01" id="prod-valor" placeholder="0.00" required>
+                </div>
+                <div class="input-group">
+                    <label for="prod-qtd">Quantidade Inicial em Unidades</label>
+                    <input type="number" id="prod-qtd" placeholder="10" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Salvar Produto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE TROCA DE OPERADOR -->
+    <div id="trocar-operador-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <button class="close-modal" onclick="fecharModalTrocarOperador()">×</button>
+            <h3>Trocar Operador</h3>
+            <form id="trocar-operador-form">
+                <div class="input-group">
+                    <label for="novo-operador">Nome do Novo Operador</label>
+                    <input type="text" id="novo-operador" placeholder="Nome do colaborador" required>
+                </div>
+                <div class="input-group">
+                    <label for="senha-operador">Senha de Autorização</label>
+                    <input type="password" id="senha-operador" placeholder="Senha (03)" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Confirmar Troca</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE FECHAMENTO DE CAIXA / SANGRIA -->
+    <div id="fechar-caixa-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 700px;">
+            <button class="close-modal" onclick="fecharCaixaModal()">×</button>
+            <h3>Relatório de Fechamento de Caixa & Sangria</h3>
+            <div class="pdv-window-body">
+                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 5px;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Total Geral Vendido Hoje</span>
+                        <h3 id="sangriaTotalGeral" style="color: var(--success-color); font-size: 1.4rem;">R$ 0,00</h3>
+                    </div>
+                    <div class="stat-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; display: flex; flex-direction: column; gap: 5px;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Total de Vendas Realizadas</span>
+                        <h3 id="sangriaTotalQtd" style="color: #fff; font-size: 1.4rem;">0 vendas</h3>
+                    </div>
+                </div>
+
+                <div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: bold;">Histórico Detalhado (Sangria)</span>
+                    <div style="max-height: 250px; overflow-y: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px;">
+                        <table class="sangria-table">
+                            <thead>
+                                <tr>
+                                    <th>Data / Hora</th>
+                                    <th>Operador(a)</th>
+                                    <th>Forma Pgto</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sangriaTableBody">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+                    <button class="btn-action" onclick="imprimirRelatorioCaixa()" style="flex: 1; padding: 12px 20px; background: #fff; color: #000; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; min-width: 150px;">🖨️ Imprimir Relatório</button>
+                    <button class="btn-danger-gradient" onclick="zerarRelatorioCaixa()" style="flex: 1; min-width: 150px;">🔄 Zerar / Reiniciar Relatório</button>
+                    <button class="btn-primary" onclick="fecharCaixaModal()" style="flex: 1; min-width: 150px;">Fechar Relatório</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JANELA DE PDV PARA FINALIZAR A COMPRA -->
+    <div id="pdv-window" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="fecharJanelaPDV()">×</button>
+            <h3>Caixa PDV // Finalização</h3>
+            <div class="pdv-window-body">
+                <div>
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">Resumo dos Itens Selecionados</span>
+                    <div id="pdvItemsList" class="pdv-items-list"></div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Total a Pagar:</span>
+                        <strong id="pdvTotalGeral" style="color: var(--success-color); font-size: 1.2rem;">R$ 0,00</strong>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="pdvFormaPagamento">Forma de Pagamento</label>
+                        <select id="pdvFormaPagamento" onchange="tratarMudancaPagamento()">
+                            <option value="PIX">Pix (Com QR Code)</option>
+                            <option value="DINHEIRO">Dinheiro</option>
+                            <option value="CARTÃO">Cartão de Crédito / Débito</option>
+                        </select>
+                    </div>
+
+                    <div id="blocoDinheiro" class="input-group" style="display: none;">
+                        <label for="pdvValorRecebido">Valor Recebido em Dinheiro (R$)</label>
+                        <input type="number" step="0.01" id="pdvValorRecebido" placeholder="0.00" oninput="calcularTroco()">
+                        <span style="font-size: 0.85rem; color: var(--success-color); margin-top: 5px; display: block;" id="textoTroco">Troco: R$ 0,00</span>
+                    </div>
+
+                    <div id="blocoPix" class="pix-box">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Escaneie o QR Code Pix abaixo</span>
+                        <div class="qrcode-box">
+                            <img id="pdvQrCodeImg" src="qrcode-pix.png" alt="QR Code Pix">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="concluirVendaPDV()" style="width: 100%;">Confirmar Pagamento e Gerar Comprovante</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GERADOR DE COMPROVANTE -->
+    <div id="receipt-modal" class="modal-overlay">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <div id="receiptContent" class="receipt-card"></div>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn-primary" onclick="fecharComprovante()">Nova Venda</button>
+                <button class="btn-action" onclick="imprimirEAutoReiniciar()" style="padding: 12px 20px; background: #fff; color: #000; font-weight: bold; border-radius: 12px; border: none; cursor: pointer;">Imprimir Cupom & Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de Persistência via LocalStorage
+        let operadorAtual = localStorage.getItem('operadorAtual') || localStorage.getItem('usuario_logado_atelie') || 'Natalia';
+
+        // Carrega e sincroniza o estoque diretamente das listas do Index (index.html)
+        function carregarEstoqueSincronizado() {
+            const roupasAtelie = JSON.parse(localStorage.getItem('estoque_atelie_roupas')) || [];
+            const joiasAtelie = JSON.parse(localStorage.getItem('estoque_atelie_joias')) || [];
+            const rubyAtelie = JSON.parse(localStorage.getItem('estoque_atelie_ruby')) || [];
+
+            // Se o Index possuir dados, eles mandam no PDV
+            if (roupasAtelie.length > 0 || joiasAtelie.length > 0 || rubyAtelie.length > 0) {
+                return {
+                    joias: joiasAtelie.filter(j => j.quantidade > 0 && j.status !== 'Vendido').map(j => ({
+                        codigo: `J-${j.id.toString().slice(-4)}`,
+                        nome: `${j.nome} (${j.cor} - ${j.tamanho})`,
+                        valor: j.precoUnitario || (j.quantidade > 0 ? j.preco / j.quantidade : j.preco),
+                        qtd: j.quantidade,
+                        qtdVenda: 1,
+                        selecionado: false,
+                        originalId: j.id
+                    })),
+                    roupas: roupasAtelie.filter(r => r.quantidade > 0 && r.status !== 'Vendido').map(r => ({
+                        codigo: `R-${r.id.toString().slice(-4)}`,
+                        nome: `${r.nome} (${r.cor} - ${r.tamanho})`,
+                        valor: r.precoUnitario || (r.quantidade > 0 ? r.preco / r.quantidade : r.preco),
+                        qtd: r.quantidade,
+                        qtdVenda: 1,
+                        selecionado: false,
+                        originalId: r.id
+                    })),
+                    maquiagens: rubyAtelie.filter(m => m.quantidade > 0 && m.status !== 'Vendido').map(m => ({
+                        codigo: `M-${m.id.toString().slice(-4)}`,
+                        nome: `${m.nome} (${m.cor} - ${m.tamanho})`,
+                        valor: m.precoUnitario || (m.quantidade > 0 ? m.preco / m.quantidade : m.preco),
+                        qtd: m.quantidade,
+                        qtdVenda: 1,
+                        selecionado: false,
+                        originalId: m.id
+                    }))
+                };
+            }
+
+            let dadosSalvos = JSON.parse(localStorage.getItem('estoqueData'));
+            if (!dadosSalvos) {
+                dadosSalvos = {
+                    joias: [
+                        { codigo: "J-01", nome: "Anel de Prata 925", valor: 129.90, qtd: 15, qtdVenda: 1, selecionado: false }
+                    ],
+                    roupas: [
+                        { codigo: "R-01", nome: "Vestido Longo Sutil", valor: 249.00, qtd: 5, qtdVenda: 1, selecionado: false }
+                    ],
+                    maquiagens: [
+                        { codigo: "M-01", nome: "Base Líquida Matte", valor: 75.00, qtd: 12, qtdVenda: 1, selecionado: false }
+                    ]
+                };
+            }
+            return dadosSalvos;
+        }
+
+        let estoqueData = carregarEstoqueSincronizado();
+        let historicoVendas = JSON.parse(localStorage.getItem('historicoVendas')) || [];
+
+        let abaAtual = 'joias';
+        let itensCarrinhoAtual = [];
+        let valorTotalCarrinho = 0;
+
+        // Escuta atualizações do LocalStorage feitas pelo Index (index.html) em tempo real
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'estoque_atelie_roupas' || e.key === 'estoque_atelie_joias' || e.key === 'estoque_atelie_ruby') {
+                estoqueData = carregarEstoqueSincronizado();
+                atualizarInterface();
+            }
+        });
+
+        window.addEventListener('pageshow', function() {
+            estoqueData = carregarEstoqueSincronizado();
+            atualizarInterface();
+        });
+
+        function abrirPesquisaIndex() {
+            window.location.href = 'index.html';
+        }
+
+        function salvarDados() {
+            localStorage.setItem('estoqueData', JSON.stringify(estoqueData));
+            localStorage.setItem('historicoVendas', JSON.stringify(historicoVendas));
+            localStorage.setItem('operadorAtual', operadorAtual);
+        }
+
+        // Login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usuario = document.getElementById('usuario').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+
+            if (senha === '03' && usuario !== '') {
+                operadorAtual = usuario;
+                document.getElementById('currentOperatorName').textContent = operadorAtual;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'flex';
+                salvarDados();
+                atualizarInterface();
+            } else {
+                alert('Senha incorreta! Use 03');
+            }
+        });
+
+        // Trocar Operador
+        function abrirModalTrocarOperador() {
+            document.getElementById('novo-operador').value = operadorAtual;
+            document.getElementById('senha-operador').value = '';
+            document.getElementById('trocar-operador-modal').style.display = 'flex';
+        }
+        function fecharModalTrocarOperador() {
+            document.getElementById('trocar-operador-modal').style.display = 'none';
+        }
+
+        document.getElementById('trocar-operador-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const novoOp = document.getElementById('novo-operador').value.trim();
+            const senhaOp = document.getElementById('senha-operador').value.trim();
+
+            if (senhaOp === '03' && novoOp !== '') {
+                operadorAtual = novoOp;
+                document.getElementById('currentOperatorName').textContent = operadorAtual;
+                salvarDados();
+                fecharModalTrocarOperador();
+                alert(`Operador alterado com sucesso para: ${operadorAtual}`);
+            } else {
+                alert('Senha incorreta!');
+            }
+        });
+
+        // Fechar Caixa / Sangria
+        function abrirFecharCaixa() {
+            let totalGeralDia = 0;
+            const tbody = document.getElementById('sangriaTableBody');
+            tbody.innerHTML = '';
+
+            if (historicoVendas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhuma venda registrada hoje.</td></tr>`;
+            } else {
+                historicoVendas.forEach(v => {
+                    totalGeralDia += v.total;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${v.dataHora}</td>
+                        <td>${v.operador}</td>
+                        <td>${v.formaPgto}</td>
+                        <td style="color: var(--success-color); font-weight: bold;">R$ ${v.total.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('sangriaTotalGeral').textContent = `R$ ${totalGeralDia.toFixed(2)}`;
+            document.getElementById('sangriaTotalQtd').textContent = `${historicoVendas.length} venda(s)`;
+            document.getElementById('fechar-caixa-modal').style.display = 'flex';
+        }
+
+        function fecharCaixaModal() {
+            document.getElementById('fechar-caixa-modal').style.display = 'none';
+        }
+
+        function zerarRelatorioCaixa() {
+            historicoVendas = [];
+            salvarDados();
+            abrirFecharCaixa();
+        }
+
+        function imprimirRelatorioCaixa() {
+            const modal = document.getElementById('fechar-caixa-modal');
+            modal.classList.add('modal-active-print');
+            window.print();
+            modal.classList.remove('modal-active-print');
+        }
+
+        function imprimirEAutoReiniciar() {
+            const modal = document.getElementById('receipt-modal');
+            modal.classList.add('modal-active-print');
+            window.print();
+            modal.classList.remove('modal-active-print');
+            fecharComprovante();
+        }
+
+        function mudarAba(aba, elemento) {
+            abaAtual = aba;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            elemento.classList.add('active');
+            document.getElementById('searchInput').value = '';
+            atualizarInterface();
+        }
+
+        function atualizarInterface(termoBusca = '') {
+            const tbody = document.getElementById('productTableBody');
+            tbody.innerHTML = '';
+
+            let produtos = estoqueData[abaAtual] || [];
+
+            if (termoBusca) {
+                produtos = produtos.filter(p => p.nome.toLowerCase().includes(termoBusca.toLowerCase()) || p.codigo.toLowerCase().includes(termoBusca.toLowerCase()));
+            }
+
+            if (produtos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum produto cadastrado.</td></tr>`;
+                atualizarResumoVenda();
+                return;
+            }
+
+            produtos.forEach((produto) => {
+                const realIndex = estoqueData[abaAtual].indexOf(produto);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="checkbox" ${produto.selecionado ? 'checked' : ''} onclick="toggleSelecionarProduto(${realIndex})"></td>
+                    <td>
+                        <strong>${produto.nome}</strong><br>
+                        <small style="color: var(--text-muted);">${produto.codigo}</small>
+                    </td>
+                    <td>R$ ${Number(produto.valor).toFixed(2)}</td>
+                    <td>${produto.qtd} un.</td>
+                    <td>
+                        <input type="number" id="qtd-venda-${realIndex}" class="qtd-venda-input" value="${produto.qtdVenda || 1}" min="1" max="${produto.qtd}" onchange="atualizarQtdVenda(${realIndex}, this.value)">
+                    </td>
+                    <td>
+                        <button class="btn-action btn-excluir" onclick="excluirProduto(${realIndex})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            atualizarResumoVenda();
+        }
+
+        function filtrarProdutos() {
+            atualizarInterface(document.getElementById('searchInput').value);
+        }
+
+        function toggleSelecionarProduto(index) {
+            estoqueData[abaAtual][index].selecionado = !estoqueData[abaAtual][index].selecionado;
+            salvarDados();
+            atualizarResumoVenda();
+        }
+
+        function toggleSelecionarTodos(masterCheckbox) {
+            estoqueData[abaAtual].forEach(p => p.selecionado = masterCheckbox.checked);
+            salvarDados();
+            atualizarInterface(document.getElementById('searchInput').value);
+        }
+
+        function atualizarQtdVenda(index, valor) {
+            let qtd = parseInt(valor) || 1;
+            let produto = estoqueData[abaAtual][index];
+            if (qtd > produto.qtd) {
+                alert('Quantidade solicitada excede o estoque!');
+                produto.qtdVenda = produto.qtd;
+            } else {
+                produto.qtdVenda = qtd;
+            }
+            salvarDados();
+            atualizarResumoVenda();
+        }
+
+        function atualizarResumoVenda() {
+            let qtdSelecionados = 0;
+            valorTotalCarrinho = 0;
+            itensCarrinhoAtual = [];
+
+            Object.keys(estoqueData).forEach(cat => {
+                estoqueData[cat].forEach(p => {
+                    if (p.selecionado) {
+                        qtdSelecionados++;
+                        valorTotalCarrinho += (p.valor * (p.qtdVenda || 1));
+                        itensCarrinhoAtual.push({ ...p, categoria: cat, unidades: p.qtdVenda || 1 });
+                    }
+                });
+            });
+
+            document.getElementById('itensSelecionadosCount').textContent = `${qtdSelecionados} produto(s)`;
+            document.getElementById('valorTotalVenda').textContent = `R$ ${valorTotalCarrinho.toFixed(2)}`;
+        }
+
+        function abrirJanelaPDV() {
+            if (itensCarrinhoAtual.length === 0) {
+                alert('Selecione ao menos um produto para finalizar a compra.');
+                return;
+            }
+
+            const listaHTML = itensCarrinhoAtual.map(item => `
+                <div class="pdv-item-row">
+                    <span>${item.nome} (${item.unidades} un.)</span>
+                    <span>R$ ${(item.valor * item.unidades).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('pdvItemsList').innerHTML = listaHTML;
+            document.getElementById('pdvTotalGeral').textContent = `R$ ${valorTotalCarrinho.toFixed(2)}`;
+            document.getElementById('pdvValorRecebido').value = '';
+            document.getElementById('textoTroco').textContent = 'Troco: R$ 0,00';
+            
+            tratarMudancaPagamento();
+            document.getElementById('pdv-window').style.display = 'flex';
+        }
+
+        function fecharJanelaPDV() {
+            document.getElementById('pdv-window').style.display = 'none';
+        }
+
+        function tratarMudancaPagamento() {
+            const forma = document.getElementById('pdvFormaPagamento').value;
+            const blocoDinheiro = document.getElementById('blocoDinheiro');
+            const blocoPix = document.getElementById('blocoPix');
+
+            blocoDinheiro.style.display = 'none';
+            blocoPix.style.display = 'none';
+
+            if (forma === 'DINHEIRO') {
+                blocoDinheiro.style.display = 'block';
+            } else if (forma === 'PIX') {
+                blocoPix.style.display = 'flex';
+                document.getElementById('pdvQrCodeImg').src = 'qrcode-pix.png';
+            }
+        }
+
+        function calcularTroco() {
+            const recebido = parseFloat(document.getElementById('pdvValorRecebido').value) || 0;
+            const troco = recebido - valorTotalCarrinho;
+            document.getElementById('textoTroco').textContent = troco >= 0 ? `Troco: R$ ${troco.toFixed(2)}` : `Faltam: R$ ${Math.abs(troco).toFixed(2)}`;
+        }
+
+        function concluirVendaPDV() {
+            fecharJanelaPDV();
+
+            itensCarrinhoAtual.forEach(cartItem => {
+                Object.keys(estoqueData).forEach(cat => {
+                    estoqueData[cat].forEach(p => {
+                        if (p.codigo === cartItem.codigo) {
+                            p.qtd = Math.max(0, p.qtd - cartItem.unidades);
+                            p.selecionado = false;
+                        }
+                    });
+                });
+            });
+
+            let roupasAtelie = JSON.parse(localStorage.getItem('estoque_atelie_roupas')) || [];
+            let joiasAtelie = JSON.parse(localStorage.getItem('estoque_atelie_joias')) || [];
+            let rubyAtelie = JSON.parse(localStorage.getItem('estoque_atelie_ruby')) || [];
+
+            itensCarrinhoAtual.forEach(cartItem => {
+                const baixarEstoque = (lista) => {
+                    return lista.map(item => {
+                        if (item.id === cartItem.originalId || `${item.nome} (${item.cor} - ${item.tamanho})` === cartItem.nome) {
+                            item.quantidade = Math.max(0, item.quantidade - cartItem.unidades);
+                            if (item.quantidade === 0) item.status = 'Vendido';
+                            item.preco = (item.precoUnitario || (item.preco / (item.quantidade + cartItem.unidades))) * item.quantidade;
+                        }
+                        return item;
+                    });
+                };
+
+                if (cartItem.categoria === 'roupas') roupasAtelie = baixarEstoque(roupasAtelie);
+                if (cartItem.categoria === 'joias') joiasAtelie = baixarEstoque(joiasAtelie);
+                if (cartItem.categoria === 'maquiagens') rubyAtelie = baixarEstoque(rubyAtelie);
+            });
+
+            localStorage.setItem('estoque_atelie_roupas', JSON.stringify(roupasAtelie));
+            localStorage.setItem('estoque_atelie_joias', JSON.stringify(joiasAtelie));
+            localStorage.setItem('estoque_atelie_ruby', JSON.stringify(rubyAtelie));
+
+            const dataHora = new Date().toLocaleString('pt-BR');
+            const formaPgto = document.getElementById('pdvFormaPagamento').value;
+            
+            historicoVendas.push({
+                dataHora: dataHora,
+                operador: operadorAtual,
+                formaPgto: formaPgto,
+                total: valorTotalCarrinho
+            });
+
+            salvarDados();
+
+            let trocoTexto = '';
+            if (formaPgto === 'DINHEIRO') {
+                const recebido = parseFloat(document.getElementById('pdvValorRecebido').value) || valorTotalCarrinho;
+                const troco = Math.max(0, recebido - valorTotalCarrinho);
+                trocoTexto = `
+                    <div class="receipt-row"><span>Valor Recebido:</span><span>R$ ${recebido.toFixed(2)}</span></div>
+                    <div class="receipt-row" style="color: green; font-weight: bold;"><span>Troco:</span><span>R$ ${troco.toFixed(2)}</span></div>
+                `;
+            }
+
+            let itensReciboHTML = itensCarrinhoAtual.map(i => `
+                <div class="receipt-row">
+                    <span>${i.unidades}x ${i.nome}</span>
+                    <span>R$ ${(i.valor * i.unidades).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            const reciboHTML = `
+                <div class="receipt-header">
+                    <h4>COMPROVANTE // ATELIÊ DA BELEZA</h4>
+                    <p>CNPJ: 00.000.000/0001-00</p>
+                    <p>${dataHora}</p>
+                </div>
+                <div class="receipt-body">
+                    <p style="margin-bottom: 8px; font-weight: bold;">COMPROVANTE DE VENDA</p>
+                    ${itensReciboHTML}
+                </div>
+                <div class="receipt-total">
+                    <div class="receipt-row">
+                        <span>TOTAL (${formaPgto}):</span>
+                        <span>R$ ${valorTotalCarrinho.toFixed(2)}</span>
+                    </div>
+                    ${trocoTexto}
+                </div>
+                <div style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #333;">
+                    <p>Operador(a): ${operadorAtual}</p>
+                    <p style="font-weight: bold; margin-top: 8px; font-size: 0.9rem;">Volte Sempre!</p>
+                </div>
+            `;
+
+            document.getElementById('receiptContent').innerHTML = reciboHTML;
+            document.getElementById('receipt-modal').style.display = 'flex';
+        }
+
+        function fecharComprovante() {
+            document.getElementById('receipt-modal').style.display = 'none';
+            document.getElementById('selectAll').checked = false;
+            atualizarInterface();
+        }
+
+        function excluirProduto(index) {
+            estoqueData[abaAtual].splice(index, 1);
+            salvarDados();
+            atualizarInterface(document.getElementById('searchInput').value);
+        }
+    </script>
+</body>
+</html>
