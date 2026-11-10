@@ -1,0 +1,428 @@
+
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(18, 22, 33, 0.85);
+            --iridescent-1: #ff9a9e;
+            --iridescent-2: #fad0c4;
+            --iridescent-3: #a1c4fd;
+            --iridescent-4: #c2e9fb;
+            --iridescent-5: #d4fc79;
+            --iridescent-6: #96e6a1;
+            --text-color: #f0f4f8;
+            --danger: #ff5c5c;
+            --danger-hover: #ff3333;
+            --success: #2ecc71;
+            --success-hover: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 154, 158, 0.08), transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(161, 196, 253, 0.08), transparent 40%);
+        }
+
+        @keyframes furtaCorAnimacao {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .texto-furta-cor {
+            background: linear-gradient(45deg, #ff9a9e, #a1c4fd, #d4fc79, #c2e9fb, #e0c3fc);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: furtaCorAnimacao 6s ease infinite;
+        }
+
+        /* --- BOTÃO FURTA-COR REFINADO (UI/UX) --- */
+        .botao-furta-cor {
+            background: linear-gradient(45deg, #ff9a9e, #a1c4fd, #c2e9fb, #d4fc79);
+            background-size: 300% 300%;
+            animation: furtaCorAnimacao 5s ease infinite;
+            color: #0b0f19;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(161, 196, 253, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .botao-furta-cor:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(161, 196, 253, 0.5);
+        }
+
+        .botao-furta-cor:active {
+            transform: translateY(0);
+        }
+
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+        }
+
+        .login-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(161, 196, 253, 0.2);
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-card .logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 2px solid #a1c4fd;
+            object-fit: cover;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(161, 196, 253, 0.4);
+        }
+
+        .login-card h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .erro-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        #app-screen {
+            display: none;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border-bottom: 1px solid rgba(161, 196, 253, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #a1c4fd;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .usuario-logado {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+        }
+
+        .usuario-logado button {
+            background: none;
+            border: none;
+            color: #ff9a9e;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .usuario-logado button:hover {
+            color: #ff5c5c;
+            text-decoration: underline;
+        }
+
+        /* --- ABAS DE NAVEGAÇÃO REFINADAS --- */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(18, 22, 33, 0.6);
+            border: 1px solid rgba(161, 196, 253, 0.3);
+            color: #a1c4fd;
+            padding: 12px 22px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover {
+            background: rgba(161, 196, 253, 0.12);
+            border-color: #a1c4fd;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #ff9a9e, #a1c4fd);
+            color: #0b0f19;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(161, 196, 253, 0.4);
+            font-weight: 700;
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .tab-content.active {
+            display: grid;
+        }
+
+        #aba-entrada.tab-content {
+            grid-template-columns: 1fr;
+            max-width: 600px;
+        }
+
+        @media (max-width: 768px) {
+            .tab-content {
+                grid-template-columns: 1fr;
+            }
+            .usuario-logado {
+                position: static;
+                margin-bottom: 15px;
+                text-align: center;
+                display: inline-block;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(161, 196, 253, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            height: fit-content;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 1px solid rgba(161, 196, 253, 0.15);
+            padding-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #c2e9fb;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(11, 15, 25, 0.8);
+            border: 1px solid rgba(161, 196, 253, 0.25);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #a1c4fd;
+            box-shadow: 0 0 10px rgba(161, 196, 253, 0.3);
+            background-color: #0b0f19;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid rgba(161, 196, 253, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .stat-box span {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #d4fc79;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 14px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        th {
+            background-color: rgba(11, 15, 25, 0.5);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: rgba(161, 196, 253, 0.04);
+        }
+
+        .badge-vendido {
+            background-color: rgba(255, 92, 92, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 92, 92, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-disponivel {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .actions-cell input.qtd-venda-input {
+            width: 60px;
+            padding: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            height: 34px;
+            border-radius: 6px;
+        }
+
+        /* --- BOTÕES DE TABELA REESTILIZADOS (UI/UX) --- */
+        .actions-cell button {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none;
+            font-weight: 700;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-vender {
+            background-color: var(--success);
+            color: #0b0f19;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-vender:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-excluir {
+            background-color: rgba(255, 92, 92, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(255, 92, 92, 0.4) !important;
+            min-width: 34px;
+        }
+
+        .btn-excluir:hover {
+            background-color: var(--danger);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 92, 92, 0.4);
+        }
+    
