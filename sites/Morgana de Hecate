@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgana de Hecate | Oráculo Sagrado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="Icone-Morgana-cutout.ico">
+    <style>
+        :root {
+            --bg-color: #050507;
+            --panel-bg: #0e0e14;
+            --border-gold: #c5a059;
+            --border-gold-bright: #e6ca84;
+            --gold-dark: #8c7131;
+            --text-color: #dfdfdf;
+            --text-muted: #a0a0a5;
+            --accent-glow: rgba(197, 160, 89, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fundo com Estrela de 5 Pontas (Pentagrama) */
+        .bg-pentagram {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(85vw, 750px);
+            height: min(85vw, 750px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bg-pentagram svg {
+            width: 100%;
+            height: 100%;
+            fill: #ffffff;
+        }
+
+        header, main, footer {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 960px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: 30px;
+        }
+
+        /* Container do Altar (Vela e Caveiras Flanqueando) */
+        .altar-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 25px;
+        }
+
+        /* Estilo Realista das Caveiras Laterais */
+        .skull-element {
+            width: 55px;
+            height: 70px;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.4));
+            animation: skullGlow 3s infinite alternate;
+        }
+
+        @keyframes skullGlow {
+            0% { filter: drop-shadow(0 0 6px rgba(197, 160, 89, 0.3)); opacity: 0.8; }
+            100% { filter: drop-shadow(0 0 15px rgba(230, 202, 132, 0.7)); opacity: 1; }
+        }
+
+        /* Vela Mística Integrada com UI Otimizada */
+        .candle-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glow {
+            position: absolute;
+            top: -40px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(255,150,50,0.3) 0%, rgba(255,100,0,0) 70%);
+            border-radius: 50%;
+            animation: pulse 2s infinite alternate;
+            pointer-events: none;
+        }
+
+        .flame-wrapper {
+            position: relative;
+            animation: flicker 0.15s ease-in-out infinite alternate;
+        }
+
+        .flame {
+            width: 20px;
+            height: 50px;
+            background: linear-gradient(to bottom, #fff 0%, #ffdf00 25%, #ff4500 70%, #0000ff 100%);
+            border-radius: 50% 50% 35% 35% / 70% 70% 30% 30%;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            transform-origin: bottom center;
+        }
+
+        .wick {
+            width: 3px;
+            height: 12px;
+            background-color: #333;
+            border-radius: 2px;
+            margin-top: -2px;
+            z-index: 2;
+        }
+
+        .wax {
+            width: 45px;
+            height: 120px;
+            background: linear-gradient(to right, #4f0272 0%, #62026b 30%, #62026b 70%, #62026b 100%);
+            border-radius: 4px 4px 2px 2px;
+            box-shadow: inset 0 10px 15px rgba(255, 255, 255, 0.3), 0 5px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .wax::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: #ff9d6c;
+            border-radius: 50%;
+        }
+
+        .drip {
+            position: absolute;
+            top: 4px;
+            left: 10px;
+            width: 5px;
+            height: 25px;
+            background-color: #ff9d6c;
+            border-radius: 0 0 4px 4px;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1deg); }
+            100% { transform: scale(1.05) rotate(1.5deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* Título com Reluz e Brilho Dourado Dinâmico */
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #fff3c4 0%, #ffe885 25%, #c5a059 50%, #fff3c4 75%, #8c7131 100%);
+            background-size: 250% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(243, 229, 171, 0.4);
+            animation: goldShimmer 4s ease infinite;
+            margin-bottom: 8px;
+        }
+
+        @keyframes goldShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-gold);
+            border-radius: 8px;
+            padding: 35px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(197, 160, 89, 0.03);
+        }
+
+        .panel h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--border-gold-bright);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .panel p.instruction {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        textarea {
+            width: 100%;
+            background-color: #030305;
+            border: 1px solid var(--border-gold);
+            color: var(--text-color);
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 1.15rem;
+            resize: vertical;
+            min-height: 120px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+        }
+
+        textarea:focus {
+            border-color: var(--border-gold-bright);
+            box-shadow: 0 0 12px var(--accent-glow), inset 0 2px 6px rgba(0,0,0,0.6);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, var(--gold-dark), var(--border-gold), var(--border-gold-bright));
+            color: #050507;
+            font-weight: 700;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
+            display: inline-block;
+        }
+
+        .btn:hover {
+            filter: brightness(1.15);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
+        }
+
+        .btn-secondary {
+            font-family: 'Cinzel', serif;
+            background: transparent;
+            color: var(--border-gold);
+            border: 1px solid var(--border-gold);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(197, 160, 89, 0.1);
+            color: var(--border-gold-bright);
+            border-color: var(--border-gold-bright);
+        }
+
+        .reading-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .question-echo {
+            font-style: italic;
+            color: var(--border-gold-bright);
+            font-size: 1.25rem;
+            padding: 12px 18px;
+            background: rgba(197, 160, 89, 0.04);
+            border-left: 3px solid var(--border-gold);
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 10px;
+        }
+
+        .cards-spread {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .card-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-position-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .marsille-card {
+            width: 150px;
+            height: 245px;
+            background-color: #0c0c10;
+            border: 3px solid var(--border-gold);
+            border-radius: 8px;
+            padding: 6px;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 0 12px rgba(197, 160, 89, 0.15);
+            animation: cardAppear 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            overflow: hidden;
+        }
+
+        .marsille-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .interpretation-box {
+            background-color: #030305;
+            border: 1px solid var(--border-gold);
+            border-left: 4px solid var(--border-gold-bright);
+            padding: 25px;
+            border-radius: 6px;
+            width: 100%;
+            margin-top: 10px;
+            line-height: 1.8;
+            font-size: 1.15rem;
+        }
+
+        .interpretation-box h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--border-gold-bright);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .pix-box-content {
+            background: rgba(3, 3, 5, 0.6);
+            border: 1px dashed var(--border-gold);
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pix-key-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            word-break: break-all;
+            font-family: 'Cinzel', serif;
+            color: var(--border-gold-bright);
+        }
+
+        .btn-elaborated {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #8c7131, #c5a059, #fff3c4);
+            color: #050507;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(197, 160, 89, 0.3);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .btn-elaborated:hover {
+           filter: brightness(1.2);
+           transform: translateY(-3px);
+           box-shadow: 0 6px 25px rgba(197, 160, 89, 0.5);
+        }
+
+        .back-to-top-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-family: 'Cinzel', serif;
+            border-top: 1px solid rgba(197, 160, 89, 0.2);
+            padding-top: 25px;
+            letter-spacing: 1px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .marsille-card {
+                width: 125px;
+                height: 205px;
+            }
+            .panel {
+                padding: 20px;
+            }
+            .altar-container {
+                gap: 20px;
+            }
+            .skull-element {
+                width: 42px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo com Estrela de 5 Pontas (Pentagrama) -->
+    <div class="bg-pentagram" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+        </svg>
+    </div>
+
+    <header id="topo">
+        <!-- Altar com Caveiras Realistas Laterais e Vela Central -->
+        <div class="altar-container">
+            <!-- Caveira Esquerda Realista (Olhando para frente) -->
+            <svg class="skull-element" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Caveira mística realista esquerda">
+                <!-- Crânio anatômico -->
+                <path d="M50 8C26 8 14 24 14 44C14 59 23 71 30 81C34 87 36 93 36 100H64C64 93 66 87 70 81C77 71 86 59 86 44C86 24 74 8 50 8Z" fill="url(#goldGrad)" stroke="#fff3c4" stroke-width="2.5"/>
+                <!-- Arco Zigomático / Maçãs do rosto texturizadas -->
+                <path d="M22 50C22 50 18 64 30 68C30 68 36 62 38 52" fill="url(#goldGradDark)" opacity="0.8"/>
+                <path d="M78 50C78 50 82 64 70 68C70 68 64 62 62 52" fill="url(#goldGradDark)" opacity="0.8"/>
+                <!-- Órbitas oculares realistas -->
+                <path d="M38 42C38 36 44 34 46 42C48 50 42 54 38 48C36 45 36 43 38 42Z" fill="#030305"/>
+                <path d="M62 42C62 36 56 34 54 42C52 50 58 54 62 48C64 45 64 43 62 42Z" fill="#030305"/>
+                <!-- Cavidade Nasal Profunda -->
+                <path d="M50 56L44 70H56L50 56Z" fill="#030305"/>
+                <!-- Maxilar e Dentes Definidos -->
+                <line x1="38" y1="88" x2="62" y2="88" stroke="#030305" stroke-width="3"/>
+                <line x1="43" y1="80" x2="43" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="47" y1="80" x2="47" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="51" y1="80" x2="51" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="55" y1="80" x2="55" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="59" y1="80" x2="59" y2="100" stroke="#030305" stroke-width="2"/>
+                <!-- Gradientes Metálicos -->
+                <defs>
+                    <linearGradient id="goldGrad" x1="14" y1="8" x2="86" y2="100" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#ffefb5"/>
+                        <stop offset="50%" stop-color="#c5a059"/>
+                        <stop offset="100%" stop-color="#8c7131"/>
+                    </linearGradient>
+                    <linearGradient id="goldGradDark" x1="22" y1="50" x2="38" y2="68" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#c5a059"/>
+                        <stop offset="100%" stop-color="#5a451c"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+
+            <!-- Vela Central -->
+            <div class="candle-container" aria-label="Vela mística acesa">
+                <div class="glow"></div>
+                <div class="flame-wrapper">
+                    <div class="flame"></div>
+                </div>
+                <div class="wick"></div>
+                <div class="wax">
+                    <div class="drip"></div>
+                </div>
+            </div>
+
+            <!-- Caveira Direita Realista (Olhando para frente) -->
+            <svg class="skull-element" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Caveira mística realista direita">
+                <!-- Crânio anatômico -->
+                <path d="M50 8C26 8 14 24 14 44C14 59 23 71 30 81C34 87 36 93 36 100H64C64 93 66 87 70 81C77 71 86 59 86 44C86 24 74 8 50 8Z" fill="url(#goldGrad)" stroke="#fff3c4" stroke-width="2.5"/>
+                <!-- Arco Zigomático / Maçãs do rosto texturizadas -->
+                <path d="M22 50C22 50 18 64 30 68C30 68 36 62 38 52" fill="url(#goldGradDark)" opacity="0.8"/>
+                <path d="M78 50C78 50 82 64 70 68C70 68 64 62 62 52" fill="url(#goldGradDark)" opacity="0.8"/>
+                <!-- Órbitas oculares realistas -->
+                <path d="M38 42C38 36 44 34 46 42C48 50 42 54 38 48C36 45 36 43 38 42Z" fill="#030305"/>
+                <path d="M62 42C62 36 56 34 54 42C52 50 58 54 62 48C64 45 64 43 62 42Z" fill="#030305"/>
+                <!-- Cavidade Nasal Profunda -->
+                <path d="M50 56L44 70H56L50 56Z" fill="#030305"/>
+                <!-- Maxilar e Dentes Definidos -->
+                <line x1="38" y1="88" x2="62" y2="88" stroke="#030305" stroke-width="3"/>
+                <line x1="43" y1="80" x2="43" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="47" y1="80" x2="47" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="51" y1="80" x2="51" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="55" y1="80" x2="55" y2="100" stroke="#030305" stroke-width="2"/>
+                <line x1="59" y1="80" x2="59" y2="100" stroke="#030305" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <h1>Morgana de Hecate</h1>
+        <p class="subtitle">Oráculo Sagrado do Tarô</p>
+    </header>
+
+    <main>
+        <!-- Painel de Pergunta -->
+        <section class="panel">
+            <h2>Consulta aos Mistérios</h2>
+            <p class="instruction">Concentre-se em sua questão, digite-a abaixo e escolha a tiragem desejada para revelar os arcanos do destino.</p>
+            <label for="user-question" class="sr-only">Sua questão para o oráculo</label>
+            <textarea id="user-question" placeholder="Ex: Qual energia rege meus caminhos neste ciclo? / O que preciso compreender sobre minhas escolhas?"></textarea>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="consultarOraculo(3)">Consultar Três Cartas</button>
+                <button class="btn" onclick="consultarOraculo(4)">Tiragem Aprofundada (4 Cartas)</button>
+            </div>
+        </section>
+
+        <!-- Painel de Resposta / Resultado (Inicialmente oculto) -->
+        <section class="panel" id="result-panel" style="display: none;" aria-live="polite">
+            <h2>Revelação do Oráculo</h2>
+            <div class="reading-area">
+                <div class="question-echo" id="echo-question"></div>
+                
+                <div class="cards-spread" id="cards-spread">
+                    <!-- Cartas sorteadas via JS -->
+                </div>
+                
+                <div class="interpretation-box">
+                    <h3>Síntese e Mensagem de Hecate</h3>
+                    <p id="interpretation-text"></p>
+                </div>
+
+                <div class="back-to-top-container">
+                    <button class="btn-secondary" onclick="voltarAoTopo()">↑ Voltar para o Topo</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Painel de Pix e Tiragens Elaboradas -->
+        <section class="panel">
+            <h2>Tiragens Mais Elaboradas & Orientações Avançadas</h2>
+            <p class="instruction">Para leituras completas, mandalas astrológicas ou previsões detalhadas de longo prazo, faça sua contribuição energética e troca justa via Pix utilizando a chave abaixo:</p>
+            
+            <div class="pix-box-content">
+                <div class="pix-key-wrapper">
+                    <span><strong>Chave Pix (E-mail):</strong> <span id="pix-key-text">terapeutanatalia227@gmail.com</span></span>
+                </div>
+                <button class="btn-secondary" onclick="copiarPixKey('terapeutanatalia227@gmail.com')" id="copy-btn">Copiar Chave</button>
+            </div>
+        </section>
+
+        <!-- Seção de Ação para WhatsApp -->
+        <section class="panel" style="text-align: center;">
+            <h2>Deseja uma Tiragem Profunda e Personalizada?</h2>
+            <p class="instruction" style="max-width: 700px; margin: 0 auto 20px auto;">
+                Para análises complexas, mandalas de autoconhecimento ou previsões detalhadas de ciclos, faça sua contribuição energética e clique no botão abaixo para enviar sua solicitação diretamente.
+            </p>
+            
+            <a href="https://wa.me/5534991650445?text=Olá%20Morgana,%20fiz%20o%20Pix%20e%20gostaria%20de%20solicitar%20uma%20Tiragem%20Aprofundada." 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="btn-elaborated">
+                ✨ Solicitar Tiragem Aprofundada
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Morgana de Hecate. Todos os direitos reservados.</p>
+        <p>&copy; Desenvolvido por Hades Softwares. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Banco de Dados Completo com as Cartas
+        const tarotDeck = [
+            { name: "A Morte (Death)", image: "Death.webp", meaning: "Transformação profunda, encerramento de ciclos e renascimento inevitável." },
+            { name: "O Julgamento (Judgement)", image: "Judgement.webp", meaning: "Despertar espiritual, avaliação de caminhos, absolvição e chamado interno." },
+            { name: "A Justiça (Justice)", image: "Justice.webp", meaning: "Equilíbrio, verdade cristalina, consequências cármicas e decisões imparciais." },
+            { name: "A Força (Strength)", image: "Strength.webp", meaning: "Coragem interior, domínio compassivo das paixões e paciência inabalável." },
+            { name: "A Temperança (Temperance)", image: "Temperance.webp", meaning: "Moderação, harmonia, cura gradual e paciência alquímica nas relações." },
+            { name: "O Carro (The Chariot)", image: "The-Chariot.webp", meaning: "Determinação, vitória sobre obstáculos, foco rigoroso e direção firme." },
+            { name: "O Diabo (The Devil)", image: "The-Devil.webp", meaning: "Apego material, ilusões, prisões autoimpostas e instintos passionais." },
+            { name: "O Imperador (The Emperor)", image: "The-Emperor.webp", meaning: "Autoridade, estrutura sólida, liderança, estabilidade e ordem lógica." },
+            { name: "A Imperatriz (The Empress)", image: "The-Empress.webp", meaning: "Fertilidade, abundância, criatividade artística e conexão com a essência criativa." },
+            { name: "A Lua (The Moon)", image: "The-Moon.webp", meaning: "Ilusões, intuição, emoções e subconsciente." },
+            { name: "A Estrela (The Star)", image: "image/The-Star.webp", meaning: "Esperança, inspiração, orientação espiritual e conexão com o universo." },
+            { name: "O Mundo (The World)", image: "The-World.webp", meaning: "Conclusão, integração, realização e ciclos completos." },
+            { name: "O Sol (The Sun)", image: "The-Sun.webp", meaning: "Alegria, sucesso, vitalidade e positividade." },
+            { name: "O Louco (The Fool)", image: "The-Fool1.webp", meaning: "Inocência, novas oportunidades, desprezo pelo medo e espontaneidade." },
+            { name: "O Hierofante (The Hierophant)", image: "The-Hierophant.webp", meaning: "Tradição, sabedoria espiritual, ensinamentos e valores instituídos." },
+            { name: "Os Amantes (The Lovers)", image: "image/The-Lovers.webp", meaning: "Amor, conexão, escolhas e harmonia." },
+            { name: "O Eremita (The Hermit)", image: "The-Hermit.webp", meaning: "Reflexão, busca interior, orientação espiritual e sabedoria adquirida." },
+            { name: "O Mago (The Magician)", image: "The-Magician-1.webp", meaning: "Criatividade, manifestação, poder e intenção." },
+            { name: "O Enforcado (The Hanged Man)", image: "The-Hanged-Man.webp", meaning: "Rendição, nova perspectiva, pausa, desapego." },
+            { name: "A Alta Sacerdotiza (The High Priestess)", image: "The-High-Priestess.webp", meaning: "Intuição, sabedoria oculta, conexão com o subconsciente." },
+            { name: "Ás de Paus (Ace Of Wands)", image:"Ás de Paus.webp", meaning: "inspiração, novas oportunidades, crescimento, potencial."},
+            { name: "Dois de Paus (Two Of Wands)", image:"Dois de Paus.webp", meaning: "planejamento, decisões, visão de futuro, progresso."},
+            { name: "Três de Paus (Three Of Wands)", image:"image/Tres de Paus.webp", meaning: "expansão, exploração, oportunidades, visão ampla."},
+            { name: "Quatro de Paus (Four Of Wands)", image:"Quatro de Paus.webp", meaning: "celebração, estabilidade, conquistas, harmonia."},
+            { name: "Cinco de Paus (Five Of Wands)", image:"Cinco de Paus.webp", meaning: "conflito, competição, desafios, superação."},
+            { name: "Seis de Paus (Six Of Wands)", image:"Seis de Paus.webp", meaning: "reconhecimento, vitória, sucesso, confiança."},
+            { name: "Sete de Paus (Seven Of Wands)", image:"Sete de Paus.webp", meaning: "defesa, perseverança, coragem, determinação."},
+            { name: "Oito de Paus (Eight Of Wands)", image:"Oito de Paus.webp", meaning: "movimento rápido, progresso, ação decisiva."},
+            { name: "Nove de Paus (Nine Of Wands)", image:"Nove dePaus.webp", meaning: "resiliência, proteção, preparação para desafios."},
+            { name: "Dez de Paus (Ten Of Wands)", image:"Dez de Paus.webp", meaning: "sobrecarga, responsabilidade, esforço excessivo."},
+            { name: "Pagina de Paus (Page Of Wands)", image:"Pagina de Paus.webp", meaning: "entusiasmo, curiosidade, novas ideias, aprendizado."},
+            { name: "Cavaleiro de Paus (Knight Of Wands)", image:"Cavaleiro de Paus.webp", meaning: "energia, aventura, ação impulsiva, paixão."},
+            { name: "Rainha de Paus (Queen Of Wands)", image:"Rainha de Paus.webp", meaning: "confiança, liderança, criatividade, determinação."},
+            { name: "Rei de Paus (King Of Wands)", image:"Rei de Paus.webp", meaning: "visão, autoridade, inspiração, liderança."},
+            { name: "Ás de Copas (Ace Of Cups)", image:"Ás de Copas.webp", meaning: "amor, emoções, novos começos, intuição."},
+            { name: "Dois de Copas (Two Of Cups)", image:"Dois de Copas.webp", meaning: "parceria, união, harmonia, conexão emocional."},
+            { name: "Três de Copas (Three Of Cups)", image:"Três de Copas.webp", meaning: "celebração, amizade, alegria, comunidade."},
+            { name: "Quatro de Copas (Four Of Cups)", image:"Quatro de Copas.webp", meaning: "reflexão, insatisfação, introspecção, oportunidades perdidas."},
+            { name: "Cinco de Copas (Five Of Cups)", image:"Cinco de Copas.webp", meaning: "perda, arrependimento, desapontamento, aprendizado."},
+            { name: "Seis de Copas (Six Of Cups)", image:"Six Of Cups.webp", meaning: "nostalgia, memórias, reconciliação, simplicidade."},
+            { name: "Sete de Copas (Seven Of Cups)", image:"Seven Of Cups.webp", meaning: "ilusão, escolhas, fantasia, confusão."},
+            { name: "Oito de Copas (Eight Of Cups)", image:"Eight Of Cups.webp", meaning: "abandono, busca interior, desapego emocional."},
+            { name: "Nove de Copas (Nine Of Cups)", image:"Nine Of Cups.webp", meaning: "realização emocional, satisfação, desejos atendidos."},
+            { name: "Dez de Copas (Ten Of Cups)", image:"Ten Of Cups.webp", meaning: "felicidade familiar, harmonia emocional, realização."},
+            { name: "Página de Copas (Page Of Cups)", image:"Page Of Cups.webp", meaning: "sensibilidade, intuição, criatividade, mensagens emocionais."},
+            { name: "Cavaleiro de Copas (Knight Of Cups)", image:"Knight Of Cups.webp", meaning: "romance, charme, idealismo, busca emocional."},
+            { name: "Rainha de Copas (Queen Of Cups)", image:"Queen Of Cups.webp", meaning: "empatia, intuição, compaixão, sensibilidade."},
+            { name: "Rei de Copas (King Of Cups)", image:"King Of Cups.webp", meaning: "equilíbrio emocional, diplomacia, maturidade afetiva."},
+            { name: "Ás de Espadas (Ace Of Swords)", image:"Ás de Espadas.webp", meaning: "clareza mental, verdade, novos começos, discernimento."},
+            { name: "Dois de Espadas (Two Of Swords)", image:"Two Of Swords.webp", meaning: "decisão difícil, equilíbrio, bloqueio emocional, indecisão."},
+            { name: "Três de Espadas (Three Of Swords)", image:"image/Três de Espadas.webp", meaning: "coração partido, tristeza, separação, dor emocional."},
+            { name: "Quatro de Espadas (Four Of Swords)", image:"Four Of Swords.webp", meaning: "descanso, recuperação, introspecção, pausa necessária."},
+            { name: "Cinco de Espadas (Five Of Swords)", image:"Five Of Swords.webp", meaning: "conflito, derrota, tensão, lições difíceis."},
+            { name: "Seis de Espadas (Six Of Swords)", image:"Six Of Swords.webp", meaning: "transição, mudança, viagem, superação de dificuldades."},
+            { name: "Sete de Espadas (Seven Of Swords)", image:"Seven Of Swords.webp", meaning: "estratégia, engano, astúcia, cautela necessária."},
+            { name: "Oito de Espadas (Eight Of Swords)", image:"Eight Of Swords.webp", meaning: "restrição, limitação, medo, sensação de aprisionamento."},
+            { name: "Nove de Espadas (Nine Of Swords)", image:"Nine Of Swords.webp", meaning: "ansiedade, preocupação, culpa, noites sem dormir."},
+            { name: "Dez de Espadas (Ten Of Swords)", image:"Ten Of Swords.webp", meaning: "fim doloroso, traição, perda total, conclusão inevitável."},
+            { name: "Página de Espadas (Page Of Swords)", image:"Page Of Swords.webp", meaning: "curiosidade, vigilância, aprendizado, comunicação."},
+            { name: "Cavaleiro de Espadas (Knight Of Swords)", image:"Knight Of Swords.webp", meaning: "ação rápida, determinação, coragem impulsiva."},
+            { name: "Rainha de Espadas (Queen Of Swords)", image:"Queen Of Swords.webp", meaning: "inteligência afiada, independência emocional e clareza mental."},
+            { name: "Rei de Espadas (King Of Swords)", image:"King Of Swords.webp", meaning: "autoridade, julgamento justo, lógica e tomada de decisões." },
+            { name: "Ás de Ouros (Ace Of Pentacles)", image:"Ás de Ouro.webp", meaning: "novas oportunidades financeiras, prosperidade, estabilidade material."},
+            { name: "Dois de Ouros (Two Of Pentacles)", image:"Two Of Pentacles.webp", meaning: "equilíbrio financeiro, adaptação, gestão de recursos."},
+            { name: "Três de Ouros (Three Of Pentacles)", image:"image/Três de Ouros.webp", meaning: "colaboração, reconhecimento, habilidades e trabalho em equipe."},
+            { name: "Quatro de Ouros (Four Of Pentacles)", image:"Four Of Pentacles.webp", meaning: "apego material, segurança financeira, controle e estabilidade."},
+            { name: "Cinco de Ouros (Five Of Pentacles)", image:"Five Of Pentacles.webp", meaning: "dificuldades financeiras, perda, isolamento e necessidade de apoio."},
+            { name: "Seis de Ouros (Six Of Pentacles)", image:"Six Of Pentacles.webp", meaning: "generosidade, equilíbrio financeiro, ajuda mútua e caridade."},
+            { name: "Sete de Ouros (Seven Of Pentacles)", image:"Seven Of Pentacles.webp", meaning: "paciente avaliação, progresso lento, colheita futura."},
+            { name: "Oito de Ouros (Eight Of Pentacles)", image:"Eight Of Pentacles.webp", meaning: "dedicação ao trabalho, aperfeiçoamento, aprendizado e habilidade."},
+            { name: "Nove de Ouros (Nine Of Pentacles)", image:"Nine Of Pentacles.webp", meaning: "independência financeira, sucesso pessoal e realização."},
+            { name: "Dez de Ouros (Ten Of Pentacles)", image:"Ten Of Pentacles.webp", meaning: "prosperidade duradoura, legado familiar e segurança material."},
+            { name: "Cavaleiro de Ouros (Knight Of Pentacles)", image:"Knight Of Pentacles.webp", meaning: "trabalho diligente, responsabilidade e perseverança."},
+            { name: "Rainha de Ouros (Queen Of Pentacles)", image:"Queen Of Pentacles.webp", meaning: "nutrição, praticidade, estabilidade financeira e cuidado com os outros."},
+            { name: "Rei de Ouros (King Of Pentacles)", image:"King Of Pentacles.webp", meaning: "sucesso material, liderança financeira e segurança."},
+            { name: "Página de Ouros (Page Of Pentacles)", image:"Page Of Pentacles.webp", meaning: "novas oportunidades, aprendizado, curiosidade e crescimento."}
+        ];
+
+        function sortearCartas(qtd) {
+            let deckCopia = [...tarotDeck];
+            let sorteadas = [];
+            for (let i = 0; i < qtd; i++) {
+                let index = Math.floor(Math.random() * deckCopia.length);
+                sorteadas.push(deckCopia.splice(index, 1)[0]);
+            }
+            return sorteadas;
+        }
+
+        function consultarOraculo(qtdCartas) {
+            const perguntaInput = document.getElementById("user-question");
+            const pergunta = perguntaInput.value.trim();
+
+            if (!pergunta) {
+                alert("Por favor, formule sua pergunta para que Morgana de Hecate consulte as cartas.");
+                perguntaInput.focus();
+                return;
+            }
+
+            const resultPanel = document.getElementById("result-panel");
+            resultPanel.style.display = "block";
+            document.getElementById("echo-question").innerText = `"${pergunta}"`;
+
+            const cartasSorteadas = sortearCartas(qtdCartas);
+            const spreadContainer = document.getElementById("cards-spread");
+            spreadContainer.innerHTML = "";
+
+            let posicoes = qtdCartas === 4 ? ["Passado", "Presente", "Agora", "Futuro"] : ["Passado / Raiz", "Presente / Momento", "Futuro / Destino"];
+
+            cartasSorteadas.forEach((carta, index) => {
+                const cardSlot = document.createElement("div");
+                cardSlot.className = "card-slot";
+                cardSlot.style.animationDelay = `${index * 0.2}s`;
+                cardSlot.innerHTML = `
+                    <span class="card-position-label">${posicoes[index]}</span>
+                    <div class="marsille-card">
+                        <img src="${carta.image}" alt="${carta.name}">
+                    </div>
+                `;
+                spreadContainer.appendChild(cardSlot);
+            });
+
+            let interpretacaoTexto = "";
+            if (qtdCartas === 4) {
+                interpretacaoTexto = `A Cartomante Morgana de Hecate examina a Tiragem Aprofundada e revela que no *Passado* a energia de *${cartasSorteadas[0].name}* influenciou os alicerces, mostrando que ${cartasSorteadas[0].meaning.toLowerCase()} No *Presente*, a carta *${cartasSorteadas[1].name}* traz o panorama atual onde ${cartasSorteadas[1].meaning.toLowerCase()} No *Agora* (o ponto de virada imediato), a força de *${cartasSorteadas[2].name}* indica que ${cartasSorteadas[2].meaning.toLowerCase()} Por fim, olhando para o *Futuro*, a carta *${cartasSorteadas[3].name}* aponta que o destino tende a caminhar para ${cartasSorteadas[3].meaning.toLowerCase()} Conduza suas escolhas com lucidez.`;
+            } else {
+                interpretacaoTexto = `A Cartomante Morgana de Hecate observa que no passado a energia da carta *${cartasSorteadas[0].name}* estabeleceu as bases, indicando que ${cartasSorteadas[0].meaning.toLowerCase()} No momento presente, a presença de *${cartasSorteadas[1].name}* atua diretamente, revelando que ${cartasSorteadas[1].meaning.toLowerCase()} Por fim, o horizonte aponta para a carta *${cartasSorteadas[2].name}*, mostrando que o desfecho tende a caminhar para ${cartasSorteadas[2].meaning.toLowerCase()} Mantenha sua intuição clara e utilize estas chaves com sabedoria.`;
+            }
+
+            document.getElementById("interpretation-text").innerText = interpretacaoTexto;
+            resultPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copiarPixKey(chave) {
+            navigator.clipboard.writeText(chave).then(() => {
+                const btn = document.getElementById("copy-btn");
+                btn.innerText = "Copiado! ✓";
+                setTimeout(() => {
+                    btn.innerText = "Copiar Chave";
+                }, 2500);
+            }).catch(err => {
+                console.error('Erro ao copiar chave Pix: ', err);
+            });
+        }
+
+        function voltarAoTopo() {
+            document.getElementById("topo").scrollIntoView({ behavior: 'smooth' });
+            document.getElementById("user-question").focus();
+        }
+    </script>
+</body>
+</html>
